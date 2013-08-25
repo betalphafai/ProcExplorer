@@ -33,13 +33,6 @@
       </item>
      </layout>
     </item>
-    <item>
-     <widget class="QTableView" name="tableView_proc_">
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
  </widget>

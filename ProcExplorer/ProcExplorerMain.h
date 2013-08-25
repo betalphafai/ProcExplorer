@@ -1,13 +1,11 @@
-#ifndef PROCEXPLORERMAIN_H
-#define PROCEXPLORERMAIN_H
+#ifndef PROCEXPLORERMAIN_H_
+#define PROCEXPLORERMAIN_H_
 
-#include <Windows.h>
-#include <TlHelp32.h>
-#include <Psapi.h>
 
 #include <QtGui/QMainWindow>
 
 #include "ui_ProcExplorerMain.h"
+#include "ProcTableView.h"
 
 class ProcExplorerMain : public QMainWindow
 {
@@ -16,15 +14,10 @@ class ProcExplorerMain : public QMainWindow
  public:
     ProcExplorerMain(QWidget *_parent = 0, Qt::WFlags _flags = 0);
     ~ProcExplorerMain(void);
-
- private:
-    int get_proc_exec_path(DWORD _proc_id, QString *_exe_path);
- signals:
-    void send_read_the_process(void);
- private slots:
-    void read_the_process(void);
  private:
     Ui::ProcExplorerMainClass ui_;
+    ProcTableView *proc_tableView_;
+//     QMap<DWORD, ProcessInfo *> proc_id_;
 };
 
-#endif // PROCEXPLORERMAIN_H
+#endif // PROCEXPLORERMAIN_H_
