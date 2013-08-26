@@ -74,3 +74,21 @@ int ProcessInfo::get_proc_id(void)
 {
     return proc_id_.toInt();
 }
+
+QStandardItemModel *ProcessInfo::toStandardModuleItemList(void)
+{
+    QStandardItemModel *_model = new QStandardItemModel();
+    _model->setColumnCount(3);
+    _model->setHorizontalHeaderLabels(
+        QStringList() << "name" << "path" << "base addr");
+    int _num = modules.size();
+    for (int i = 0; i != _num; ++i)
+    {
+        QList<QStandardItem *> _list;
+        _list << new QStandardItem(modules[i]->name_)
+            << new QStandardItem(modules[i]->path_)
+            << new QStandardItem(modules[i]->base_addr_);
+        _model->appendRow(_list);
+    }
+    return _model;
+}

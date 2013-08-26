@@ -8,6 +8,8 @@
 #include <QList>
 #include <QStandardItem>
 
+#include "ModuleInfo.h"
+
 class ProcessInfo
     : public QObject
 {
@@ -20,6 +22,8 @@ class ProcessInfo
     void init(HEAPENTRY32 *_item);
     void set_block_size(unsigned long _size);
     int get_proc_id(void);
+    void add_module(ModuleInfo *_item) { modules.push_back(_item); };
+    QStandardItemModel *toStandardModuleItemList(void);
     QList<QStandardItem *> toStandardItemList(void);
  private:
     int get_proc_exec_path(DWORD _proc_id, QString *_exe_path);
@@ -31,6 +35,8 @@ class ProcessInfo
     QString proc_path_;
     QString usage_count_;
     QString block_size_;
+
+    QList<ModuleInfo *> modules;
 };
 
 #endif // PROCESSINFO_H_
