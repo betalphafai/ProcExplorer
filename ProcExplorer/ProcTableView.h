@@ -18,7 +18,6 @@ class ProcTableView : public QTableView
  public:
     ProcTableView(QWidget *parent = 0);
     ~ProcTableView(void);
-
  private slots:
     void read_the_process(void);
     void show_menu(const QPoint &_point);

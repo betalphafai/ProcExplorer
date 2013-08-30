@@ -7,7 +7,7 @@
 
 #include "ProcExplorerMain.h"
 
-ProcExplorerMain::ProcExplorerMain(QWidget *_parent, Qt::WFlags _flags)
+ProcExplorerMain::ProcExplorerMain(QWidget *_parent, Qt::WindowFlags _flags)
     : QMainWindow(_parent, _flags)
 {
     ui_.setupUi(this);
@@ -15,13 +15,14 @@ ProcExplorerMain::ProcExplorerMain(QWidget *_parent, Qt::WFlags _flags)
 
     QStandardItemModel *_model = new QStandardItemModel(this);
     QStringList _header;
-    _header << "process name" << "process id" << "parent process id "
-        << "thread count" << "path" << "usage" << "block size";
+    _header << "Process Name" << "Process Id" << "Parent Process Id "
+        << "Thread Count" << "Path" << "Usage" << "Block Size";
     _model->setHorizontalHeaderLabels(_header);
     proc_tableView_->setModel(_model);
     proc_tableView_->verticalHeader()->setHidden(true);
     proc_tableView_->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui_.verticalLayout->addWidget(proc_tableView_);
+    proc_tableView_->resizeRowsToContents();
 
     // create a timer to reflush the process id every second
     QTimer *_timer = new QTimer(this);

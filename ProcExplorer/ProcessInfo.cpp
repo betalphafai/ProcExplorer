@@ -80,7 +80,7 @@ QStandardItemModel *ProcessInfo::toStandardModuleItemList(void)
     QStandardItemModel *_model = new QStandardItemModel();
     _model->setColumnCount(3);
     _model->setHorizontalHeaderLabels(
-        QStringList() << "name" << "path" << "base addr");
+        QStringList() << "Name" << "Path" << "Base Addr");
     int _num = modules.size();
     for (int i = 0; i != _num; ++i)
     {

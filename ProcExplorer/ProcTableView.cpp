@@ -5,6 +5,7 @@
 #include <QString>
 #include <QList>
 
+#include "ProcExplorerMain.h"
 #include "ProcTableView.h"
 #include "ModuleDialog.h"
 
@@ -31,8 +32,11 @@ ProcTableView::~ProcTableView(void)
 
 void ProcTableView::read_the_process(void)
 {
+    // backup the index
+    focus_index_ = currentIndex().row();
+    QModelIndex _index = currentIndex();
     // get the model
-    QStandardItemModel *_model = (QStandardItemModel *)model();
+	QStandardItemModel *_model = (QStandardItemModel *)model();
     // remove the model row
     _model->removeRows(0, _model->rowCount());
     proc_info_.clear();
@@ -55,7 +59,9 @@ void ProcTableView::read_the_process(void)
     }
     CloseHandle(hSnapShot);
 
-
+    //resizeColumnsToContents();
+    selectRow(focus_index_);
+    setCurrentIndex(_index);
     // show the processes num
 //     ui_.label_proc_num_->setText(
 //         "Processes number:" + QString::number(proc_info_.size()));
