@@ -4,10 +4,13 @@
 #include <QStandardItem>
 #include <QString>
 #include <QList>
+#include <QDesktopServices>
+#include <QUrl>
 
 #include "ProcExplorerMain.h"
 #include "ProcTableView.h"
 #include "ModuleDialog.h"
+#include "PEFile.h"
 
 static const wchar_t *g_dll_name = L"E:\\CodeBase\\Output\\TestDll.dll";
 static const wchar_t *g_kernel_name = L"Kernel32.dll";
@@ -72,9 +75,15 @@ void ProcTableView::show_menu(const QPoint &_point)
     QMenu *_menu = new QMenu(this);
     QAction *_action = _menu->addAction("Injection");
     connect(_action, SIGNAL(triggered()), this, SLOT(injection()));
-    QAction *_action_read_module = _menu->addAction("module");
+    QAction *_action_read_module = _menu->addAction("Module");
     connect(_action_read_module, SIGNAL(triggered()),
         this, SLOT(read_the_module()));
+    QAction *_action_read_the_pe_file = _menu->addAction("Read PE file");
+    connect(_action_read_the_pe_file, SIGNAL(triggered()),
+        this, SLOT(read_the_pe_file()));
+    QAction *_action_open_file_path = _menu->addAction("Open the file");
+    connect(_action_open_file_path, SIGNAL(triggered()),
+        this, SLOT(open_the_file()));
 
     _menu->move(QCursor::pos());
     focus_index_ = rowAt(_point.y());
@@ -158,4 +167,22 @@ void ProcTableView::read_the_module(void)
     _dialog->setModal(true);
     _dialog->set_data(proc_info_[focus_index_]);
     _dialog->show();
+}
+
+void ProcTableView::read_the_pe_file(void)
+{
+    if (focus_index_ == -1) return;
+    QString _path = proc_info_[focus_index_]->get_proc_path();
+
+    PEFile *_file = new PEFile(this);
+    _file->read_the_pe_file(_path);
+}
+
+void ProcTableView::open_the_file(void)
+{
+    if (focus_index_ == -1) return;
+    QString _path = proc_info_[focus_index_]->get_proc_path();
+    _path = _path.left(_path.lastIndexOf('\\'));
+
+    QDesktopServices::openUrl(QUrl("file:///" + _path, QUrl::TolerantMode));
 }

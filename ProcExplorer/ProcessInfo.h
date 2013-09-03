@@ -23,6 +23,7 @@ class ProcessInfo
     void set_block_size(unsigned long _size);
     int get_proc_id(void);
     void add_module(ModuleInfo *_item) { modules.push_back(_item); };
+    inline QString get_proc_path(void) { return proc_path_; }
     QStandardItemModel *toStandardModuleItemList(void);
     QList<QStandardItem *> toStandardItemList(void);
  private:

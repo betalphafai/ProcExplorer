@@ -23,6 +23,8 @@ class ProcTableView : public QTableView
     void show_menu(const QPoint &_point);
     void injection(void);
     void read_the_module(void);
+    void read_the_pe_file(void);
+    void open_the_file(void);
 
  private:
     Ui::ProcTableView ui;
