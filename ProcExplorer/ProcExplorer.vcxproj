@@ -83,6 +83,7 @@
       <ModuleDefinitionFile />
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <PostBuildEvent>
       <Command>copy ..\Win32\Debug\ProcExplorer.exe E:\CodeBase\Output\ProcExplorer.exe</Command>
@@ -101,6 +102,7 @@
     <ClCompile Include="GeneratedFiles\Release\moc_PEFileDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GlobalSupport.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModuleDialog.cpp" />
     <ClCompile Include="ModuleInfo.cpp" />
@@ -280,6 +282,7 @@
 </Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
+      <SubType>Designer</SubType>
     </CustomBuild>
     <CustomBuild Include="ProcTableView.ui">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Uic%27ing %(Filename)%(Extension)...</Message>
@@ -344,6 +347,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_PEFileDialog.h" />
+    <ClInclude Include="GlobalSupport.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
