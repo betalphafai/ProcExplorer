@@ -1,15 +1,10 @@
 #ifndef PROCTABLEVIEW_H_
 #define PROCTABLEVIEW_H_
 
-#include <Windows.h>
-#include <TlHelp32.h>
-#include <Psapi.h>
-
-#include <QTableView>
-#include <QPoint>
 
 #include "ui_ProcTableView.h"
-#include "ProcessInfo.h"
+
+class ProcessInfo;
 
 class ProcTableView : public QTableView
 {

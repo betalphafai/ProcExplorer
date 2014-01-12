@@ -1,11 +1,14 @@
 
 
+#include <QMainWindow>
+#include <QWidget>
 #include <QStandardItem>
 #include <QString>
 #include <QList>
 #include <QTimer>
 
 #include "ProcExplorerMain.h"
+#include "ProcTableView.h"
 
 ProcExplorerMain::ProcExplorerMain(QWidget *_parent, Qt::WindowFlags _flags)
     : QMainWindow(_parent, _flags)

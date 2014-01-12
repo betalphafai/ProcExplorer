@@ -5,10 +5,13 @@
 #include <TlHelp32.h>
 #include <Psapi.h>
 
+#include <QObject>
 #include <QList>
 #include <QStandardItem>
+#include <QStandardItemModel>
+#include <QString>
 
-#include "ModuleInfo.h"
+class ModuleInfo;
 
 class ProcessInfo
     : public QObject

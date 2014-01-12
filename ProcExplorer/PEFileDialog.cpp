@@ -1,7 +1,8 @@
+
 #include "PEFileDialog.h"
 
-PEFileDialog::PEFileDialog(QWidget *parent)
-    : QWidget(parent)
+PEFileDialog::PEFileDialog(QDialog *parent)
+    : QDialog(parent)
 {
     ui.setupUi(this);
 }

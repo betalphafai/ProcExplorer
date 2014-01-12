@@ -1,5 +1,6 @@
 
 #include "ProcessInfo.h"
+#include "ModuleInfo.h"
 
 ProcessInfo::ProcessInfo(QObject *parent)
     : QObject(parent)

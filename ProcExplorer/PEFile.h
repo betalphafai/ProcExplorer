@@ -4,7 +4,6 @@
 #include <Windows.h>
 
 #include <QObject>
-#include <QList>
 
 class PEFile : public QObject
 {

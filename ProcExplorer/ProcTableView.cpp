@@ -1,5 +1,8 @@
 
 #include <Windows.h>
+#include <TlHelp32.h>
+#include <Psapi.h>
+
 #include <QMenu>
 #include <QStandardItem>
 #include <QString>
@@ -11,6 +14,7 @@
 #include "ProcTableView.h"
 #include "ModuleDialog.h"
 #include "PEFile.h"
+#include "ModuleInfo.h"
 
 static const wchar_t *g_dll_name = L"E:\\CodeBase\\Output\\TestDll.dll";
 static const wchar_t *g_kernel_name = L"Kernel32.dll";

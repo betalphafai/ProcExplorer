@@ -1,11 +1,9 @@
 #ifndef PROCEXPLORERMAIN_H_
 #define PROCEXPLORERMAIN_H_
 
-#include <QWidget>
-#include <QMainWindow>
-
 #include "ui_ProcExplorerMain.h"
-#include "ProcTableView.h"
+
+class ProcTableView;
 
 class ProcExplorerMain : public QMainWindow
 {

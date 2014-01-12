@@ -2,7 +2,6 @@
 #define MODULEINFO_H_
 
 #include <QObject>
-#include <QString>
 
 class ModuleInfo
     : public QObject

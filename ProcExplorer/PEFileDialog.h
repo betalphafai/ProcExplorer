@@ -1,15 +1,16 @@
 #ifndef PEFILEDIALOG_H
 #define PEFILEDIALOG_H
 
-#include <QWidget>
+#include <QDialog>
+
 #include "ui_PEFileDialog.h"
 
-class PEFileDialog : public QWidget
+class PEFileDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    PEFileDialog(QWidget *parent = 0);
+    PEFileDialog(QDialog *parent = 0);
     ~PEFileDialog();
 
 private:
