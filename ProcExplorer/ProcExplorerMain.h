@@ -13,7 +13,7 @@ class ProcExplorerMain : public QMainWindow
     ProcExplorerMain(QWidget *_parent = 0, Qt::WindowFlags _flags = 0);
     ~ProcExplorerMain(void);
  private:
-    Ui::ProcExplorerMainClass ui_;
+    Ui::ProcExplorerMain ui_;
     ProcTableView *proc_tableView_;
 //     QMap<DWORD, ProcessInfo *> proc_id_;
 };

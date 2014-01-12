@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ProcExplorerMainClass</class>
- <widget class="QMainWindow" name="ProcExplorerMainClass">
+ <class>ProcExplorerMain</class>
+ <widget class="QMainWindow" name="ProcExplorerMain">
   <property name="geometry">
    <rect>
     <x>0</x>

@@ -9,6 +9,7 @@
 #include <QList>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QTimer>
 
 #include "ProcExplorerMain.h"
 #include "ProcTableView.h"
@@ -22,14 +23,25 @@ static const char *g_entry_func_name = "LoadLibraryW";
 
 ProcTableView::ProcTableView(QWidget *parent)
     : QTableView(parent),
+    ui(new Ui::ProcTableView),
     focus_index_(-1)
 {
-    ui.setupUi(this);
+    ui->setupUi(this);
+
+    verticalHeader()->setHidden(true);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    resizeRowsToContents();
+    setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    // Set Right KeyDown Menu
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
         this, SLOT(show_menu(const QPoint &)));
 
-    setSelectionBehavior(QAbstractItemView::SelectRows);
+    // create a timer to reflush the process id every second
+    QTimer *_timer = new QTimer(this);
+    connect(_timer, SIGNAL(timeout()), this, SLOT(read_the_process()));
+    _timer->start(1000);
 }
 
 ProcTableView::~ProcTableView(void)

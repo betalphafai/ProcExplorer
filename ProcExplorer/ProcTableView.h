@@ -22,7 +22,7 @@ class ProcTableView : public QTableView
     void open_the_file(void);
 
  private:
-    Ui::ProcTableView ui;
+    Ui::ProcTableView *ui;
     int focus_index_;
     int focus_proc_id_;
     QList<ProcessInfo *> proc_info_;
