@@ -1,4 +1,4 @@
-
+﻿
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
@@ -10,12 +10,16 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QTimer>
+#include <QItemSelection>
+#include <QScrollBar>
+#include <qDebug>
 
 #include "ProcExplorerMain.h"
 #include "ProcTableView.h"
 #include "ModuleDialog.h"
 #include "PEFile.h"
 #include "ModuleInfo.h"
+#include "ProcModel.h"
 
 static const wchar_t *g_dll_name = L"E:\\CodeBase\\Output\\TestDll.dll";
 static const wchar_t *g_kernel_name = L"Kernel32.dll";
@@ -23,15 +27,20 @@ static const char *g_entry_func_name = "LoadLibraryW";
 
 ProcTableView::ProcTableView(QWidget *parent)
     : QTableView(parent),
-    ui(new Ui::ProcTableView),
     focus_index_(-1)
 {
-    ui->setupUi(this);
-
+    // 隐藏列表头
     verticalHeader()->setHidden(true);
+    // 设置横表头最后项为伸展
+    horizontalHeader()->setStretchLastSection(true);
+    // 表不可编辑
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    resizeRowsToContents();
+    // 行选项
     setSelectionBehavior(QAbstractItemView::SelectRows);
+    // 单行选择
+    setSelectionMode(QAbstractItemView::SingleSelection);
+    // 列自适应宽度
+    resizeColumnsToContents();
 
     // Set Right KeyDown Menu
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -41,7 +50,7 @@ ProcTableView::ProcTableView(QWidget *parent)
     // create a timer to reflush the process id every second
     QTimer *_timer = new QTimer(this);
     connect(_timer, SIGNAL(timeout()), this, SLOT(read_the_process()));
-    _timer->start(1000);
+    _timer->start(2000);
 }
 
 ProcTableView::~ProcTableView(void)
@@ -51,39 +60,40 @@ ProcTableView::~ProcTableView(void)
 
 void ProcTableView::read_the_process(void)
 {
-    // backup the index
-    focus_index_ = currentIndex().row();
+    // 保存当前所选项和当前滚动条位置
     QModelIndex _index = currentIndex();
-    // get the model
-	QStandardItemModel *_model = (QStandardItemModel *)model();
-    // remove the model row
+    int _value = verticalScrollBar()->value();
+    // 清空Model数据
+    ProcModel *_model = ((ProcModel *)model());
     _model->removeRows(0, _model->rowCount());
-    proc_info_.clear();
 
-    // read the process info
+    // 获取进程数据（快照）
     HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-
-    int _proc_id_count = 0;
     PROCESSENTRY32 _proc_entry;
     _proc_entry.dwSize = sizeof(PROCESSENTRY32);
     bool bResult = Process32First(hSnapShot, &_proc_entry);
     while (bResult)
     {
-        ProcessInfo *_proc = new ProcessInfo(this);
-        _proc->init(&_proc_entry);
-        proc_info_.push_back(_proc);
-
-        _model->appendRow(_proc->toStandardItemList());
+        if (!_model->addRow(_proc_entry))
+        {
+            qDebug() << "Update Row";
+            _model->updateRow(_proc_entry);
+        }
+        else
+        {
+            qDebug() << "Add Row";
+        }
         bResult = Process32Next(hSnapShot, &_proc_entry);
     }
     CloseHandle(hSnapShot);
 
-    //resizeColumnsToContents();
-    selectRow(focus_index_);
+    // 更新Model
+    _model->update();
+    // 恢复所选择项和滚动条位置
     setCurrentIndex(_index);
-    // show the processes num
-//     ui_.label_proc_num_->setText(
-//         "Processes number:" + QString::number(proc_info_.size()));
+    verticalScrollBar()->setValue(_value);
+    // 行自适应高度
+    resizeRowsToContents();
 }
 
 void ProcTableView::show_menu(const QPoint &_point)
@@ -110,7 +120,9 @@ void ProcTableView::show_menu(const QPoint &_point)
 void ProcTableView::injection(void)
 {
     if (focus_index_ == -1) return;
-    int _proc_id = proc_info_[focus_index_]->get_proc_id();
+    QModelIndex _item = ((ProcModel *)model())->index(
+                            focus_index_, ProcModel::PROC_ID);
+    int _proc_id = _item.data().toInt();
 
     HANDLE hProc = OpenProcess(
         PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE,
@@ -158,7 +170,9 @@ void ProcTableView::injection(void)
 void ProcTableView::read_the_module(void)
 {
     if (focus_index_ == -1) return;
-    int _proc_id = proc_info_[focus_index_]->get_proc_id();
+    QModelIndex _item = ((ProcModel *)model())->index(
+                            focus_index_, ProcModel::PROC_ID);
+    int _proc_id = _item.data().toInt();
 
     HANDLE _hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, _proc_id);
     MODULEENTRY32W _module_entry;
@@ -176,19 +190,21 @@ void ProcTableView::read_the_module(void)
             QString::fromUtf16(_module_entry.szExePath),
             (unsigned int)_module_entry.modBaseAddr,
             NULL);
-        proc_info_[focus_index_]->add_module(_item);
+        // proc_info_[focus_index_]->add_module(_item);
         bResult = Module32NextW(_hSnapShot, &_module_entry);
     }
     ModuleDialog *_dialog = new ModuleDialog(this);
     _dialog->setModal(true);
-    _dialog->set_data(proc_info_[focus_index_]);
+    // _dialog->set_data(proc_info_[focus_index_]);
     _dialog->show();
 }
 
 void ProcTableView::read_the_pe_file(void)
 {
     if (focus_index_ == -1) return;
-    QString _path = proc_info_[focus_index_]->get_proc_path();
+    QModelIndex _item = ((ProcModel *)model())->index(
+                            focus_index_, ProcModel::PROC_PATH);
+    QString _path = _item.data().toString();
 
     PEFile *_file = new PEFile(this);
     _file->read_the_pe_file(_path);
@@ -197,7 +213,9 @@ void ProcTableView::read_the_pe_file(void)
 void ProcTableView::open_the_file(void)
 {
     if (focus_index_ == -1) return;
-    QString _path = proc_info_[focus_index_]->get_proc_path();
+    QModelIndex _item = ((ProcModel *)model())->index(
+                            focus_index_, ProcModel::PROC_PATH);
+    QString _path = _item.data().toString();
     _path = _path.left(_path.lastIndexOf('\\'));
 
     QDesktopServices::openUrl(QUrl("file:///" + _path, QUrl::TolerantMode));

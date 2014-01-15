@@ -1,10 +1,13 @@
-#ifndef PROCTABLEVIEW_H_
+﻿#ifndef PROCTABLEVIEW_H_
 #define PROCTABLEVIEW_H_
 
-
-#include "ui_ProcTableView.h"
+#include <QTableView>
+#include <QWidget>
+#include <QList>
+#include <QPoint>
 
 class ProcessInfo;
+class ProcModel;
 
 class ProcTableView : public QTableView
 {
@@ -22,10 +25,8 @@ class ProcTableView : public QTableView
     void open_the_file(void);
 
  private:
-    Ui::ProcTableView *ui;
     int focus_index_;
     int focus_proc_id_;
-    QList<ProcessInfo *> proc_info_;
 };
 
 #endif // PROCTABLEVIEW_H_

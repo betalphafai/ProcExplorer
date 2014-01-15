@@ -13,8 +13,3 @@ ModuleDialog::~ModuleDialog(void)
 {
 
 }
-
-void ModuleDialog::set_data(ProcessInfo *_item)
-{
-    ui.tableView->setModel(_item->toStandardModuleItemList());
-}

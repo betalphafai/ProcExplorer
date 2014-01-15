@@ -1,4 +1,4 @@
-
+﻿
 
 #include <QMainWindow>
 #include <QWidget>
@@ -7,17 +7,14 @@
 
 #include "ProcExplorerMain.h"
 #include "ProcTableView.h"
+#include "ProcModel.h"
 
 ProcExplorerMain::ProcExplorerMain(QWidget *_parent, Qt::WindowFlags _flags)
     : QMainWindow(_parent, _flags)
 {
     ui_.setupUi(this);
     proc_tableView_ = new ProcTableView(this);
-    QStandardItemModel *_model = new QStandardItemModel(this);
-    QStringList _header;
-    _header << "Process Name" << "Process Id" << "Parent Process Id "
-        << "Thread Count" << "Path" << "Usage" << "Block Size";
-    _model->setHorizontalHeaderLabels(_header);
+    ProcModel *_model = new ProcModel(this);
     proc_tableView_->setModel(_model);
     ui_.verticalLayout->addWidget(proc_tableView_);
 }
