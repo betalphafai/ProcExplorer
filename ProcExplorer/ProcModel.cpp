@@ -5,7 +5,8 @@
 
 ProcModel::ProcModel(QObject *parent, ProcessInfoPriv *_data)
     : QAbstractItemModel(parent),
-    data_(new QList<ProcessEntry>())
+    data_(new QList<ProcessEntry>()),
+    data_priv_(new ProcessInfoPriv(data_))
 {
     header_ << CH_STRING("进程名")
         << CH_STRING("进程id")
@@ -13,7 +14,6 @@ ProcModel::ProcModel(QObject *parent, ProcessInfoPriv *_data)
         << CH_STRING("线程数")
         << CH_STRING("基本优先级")
         << CH_STRING("路径");
-    data_priv_ = new ProcessInfoPriv(data_);
 }
 
 ProcModel::~ProcModel()
@@ -205,5 +205,5 @@ QString ProcModel::proc_base_pri(long _base_pri) const
     else if (_base_pri == 9L) return QString("Normal");
     else if (_base_pri == 11L) return QString("Normal");
     else if (_base_pri == 13L) return QString("High");
-    else return QString();
+    else return QString::number(_base_pri);
 }
