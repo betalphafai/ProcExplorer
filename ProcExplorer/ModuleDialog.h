@@ -10,7 +10,7 @@ class ModuleDialog : public QDialog
     Q_OBJECT
 
 public:
-    ModuleDialog(QWidget *_parent = 0);
+    ModuleDialog(unsigned int _id, QWidget *_parent = 0);
     ~ModuleDialog(void);
 
 private:

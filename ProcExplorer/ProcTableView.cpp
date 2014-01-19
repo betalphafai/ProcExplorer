@@ -18,7 +18,7 @@
 #include "ProcTableView.h"
 #include "ModuleDialog.h"
 #include "PEFile.h"
-#include "ModuleInfo.h"
+#include "ModModel.h"
 #include "ProcModel.h"
 
 static const wchar_t *g_dll_name = L"E:\\CodeBase\\Output\\TestDll.dll";
@@ -46,11 +46,13 @@ ProcTableView::ProcTableView(QWidget *parent)
     setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
         this, SLOT(show_menu(const QPoint &)));
+    connect(this, SIGNAL(update_proc_num(int)),
+        parent, SLOT(set_proc_num(int)));
 
     // create a timer to reflush the process id every second
     QTimer *_timer = new QTimer(this);
     connect(_timer, SIGNAL(timeout()), this, SLOT(read_the_process()));
-    _timer->start(2000);
+    _timer->start(1000);
 }
 
 ProcTableView::~ProcTableView(void)
@@ -94,6 +96,8 @@ void ProcTableView::read_the_process(void)
     verticalScrollBar()->setValue(_value);
     // 行自适应高度
     resizeRowsToContents();
+    // 更新进程数
+    emit update_proc_num(_model->rowCount());
 }
 
 void ProcTableView::show_menu(const QPoint &_point)
@@ -174,26 +178,7 @@ void ProcTableView::read_the_module(void)
                             focus_index_, ProcModel::PROC_ID);
     int _proc_id = _item.data().toInt();
 
-    HANDLE _hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, _proc_id);
-    MODULEENTRY32W _module_entry;
-    _module_entry.dwSize = sizeof(MODULEENTRY32W);
-    bool bResult = Module32FirstW(_hSnapShot, &_module_entry);
-    int _error = 0;
-    if (!bResult)
-    {
-        _error = GetLastError();
-    }
-    while (bResult)
-    {
-        ModuleInfo *_item = new ModuleInfo(
-            QString::fromUtf16(_module_entry.szModule),
-            QString::fromUtf16(_module_entry.szExePath),
-            (unsigned int)_module_entry.modBaseAddr,
-            NULL);
-        // proc_info_[focus_index_]->add_module(_item);
-        bResult = Module32NextW(_hSnapShot, &_module_entry);
-    }
-    ModuleDialog *_dialog = new ModuleDialog(this);
+    ModuleDialog *_dialog = new ModuleDialog(_proc_id, this);
     _dialog->setModal(true);
     // _dialog->set_data(proc_info_[focus_index_]);
     _dialog->show();

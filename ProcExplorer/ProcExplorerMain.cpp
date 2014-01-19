@@ -16,10 +16,17 @@ ProcExplorerMain::ProcExplorerMain(QWidget *_parent, Qt::WindowFlags _flags)
     proc_tableView_ = new ProcTableView(this);
     ProcModel *_model = new ProcModel(this);
     proc_tableView_->setModel(_model);
-    ui_.verticalLayout->addWidget(proc_tableView_);
+    ui_.centralWidget->layout()->addWidget(proc_tableView_);
 }
 
 ProcExplorerMain::~ProcExplorerMain(void)
 {
 
+}
+
+void ProcExplorerMain::set_proc_num( int _num )
+{
+    ui_.label_proc_num_->setText(
+        QString::fromLocal8Bit("进程数：") + 
+        QString::number(_num));
 }

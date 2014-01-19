@@ -15,7 +15,8 @@ class ProcExplorerMain : public QMainWindow
  private:
     Ui::ProcExplorerMain ui_;
     ProcTableView *proc_tableView_;
-//     QMap<DWORD, ProcessInfo *> proc_id_;
+ public slots:
+    void set_proc_num(int _num);
 };
 
 #endif // PROCEXPLORERMAIN_H_

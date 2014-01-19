@@ -23,7 +23,8 @@ class ProcTableView : public QTableView
     void read_the_module(void);
     void read_the_pe_file(void);
     void open_the_file(void);
-
+ signals:
+    void update_proc_num(int _proc_id);
  private:
     int focus_index_;
     int focus_proc_id_;
