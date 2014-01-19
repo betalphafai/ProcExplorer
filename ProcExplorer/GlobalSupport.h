@@ -6,6 +6,7 @@
 #include <Psapi.h>
 
 #define ProcessEntry PROCESSENTRY32
+#define ModuleEntry MODULEENTRY32
 #define CH_STRING(ch) QString::fromLocal8Bit(ch)
 
 class GlobalSupport
