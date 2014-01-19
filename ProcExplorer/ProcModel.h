@@ -98,7 +98,13 @@ struct ProcessInfoPriv
         // if (cached_data_ == NULL) return NULL;
         if (_index < 0 || _index >= cached_data_.size()) return NULL;
         else return &cached_data_[_index];
-    } const
+    }
+    const ProcessInfoEntry *index(int _index) const
+    {
+        // if (cached_data_ == NULL) return NULL;
+        if (_index < 0 || _index >= cached_data_.size()) return NULL;
+        else return &cached_data_[_index];
+    }
 
     // 删除指定下标的数据
     // 参数_index：下标
